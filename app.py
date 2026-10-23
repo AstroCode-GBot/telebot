@@ -1,14 +1,3 @@
-"""ModifyXHUB Telegram bot webhook + REST API.
-
-Compatible with the existing ModifyXHUB MySQL schema:
-  telegram_contacts(telegram_id, chat_id, username, username_key,
-                    first_name, last_name, last_seen_at, created_at)
-  login_codes(telegram_id, username_key, code_hash, expires_at,
-              attempts, last_sent_at, created_at)
-
-Run locally / on WSGI hosts: gunicorn app:app
-Vercel detects the Flask app from app.py. All durable state stays in MySQL.
-"""
 from __future__ import annotations
 
 import hmac
@@ -35,7 +24,7 @@ logger = logging.getLogger("modifyxhub-bot")
 app = Flask(__name__)
 app.config["MAX_CONTENT_LENGTH"] = 1024 * 1024
 
-APP_NAME = "ModifyXHUB Telegram Bot API"
+APP_NAME = "Connect Suite Telegram Bot API"
 APP_VERSION = "1.0.0"
 BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "").strip()
 BOT_USERNAME = os.getenv("TELEGRAM_BOT_USERNAME", "").strip().lstrip("@")
@@ -214,7 +203,7 @@ def handle_telegram_update(update: dict[str, Any]) -> None:
     command = text.split(maxsplit=1)[0].split("@", 1)[0].lower()
     if command == "/start":
         reply = (
-            "Welcome to ModifyXHUB! ✅\n\n"
+            "Welcome to Connect Suite! ✅\n\n"
             f"YOUR USERID IS : {telegram_id}\n\n"
             "Copy this numeric USERID and paste it into the website login page. "
             "Then request a one-time verification code; it will be sent to this Telegram chat.\n\n"
@@ -222,7 +211,7 @@ def handle_telegram_update(update: dict[str, Any]) -> None:
         )
     elif command in ("/help", "/id", "/userid"):
         reply = (
-            "ModifyXHUB login help\n\n"
+            "Connect Suite login help\n\n"
             f"YOUR USERID IS : {telegram_id}\n\n"
             "1. Copy the numeric USERID above.\n"
             "2. Enter it on the website login page.\n"
@@ -231,7 +220,7 @@ def handle_telegram_update(update: dict[str, Any]) -> None:
         )
     else:
         reply = (
-            "ModifyXHUB website login bot.\n\n"
+            "Connect Suite website login bot.\n\n"
             f"YOUR USERID IS : {telegram_id}\n\n"
             "Send /start to view your ID and connect this Telegram chat to your website account."
         )
@@ -457,7 +446,7 @@ def request_login_code():
         try:
             send_message(
                 int(contact["chat_id"]),
-                "ModifyXHUB login verification\n\n"
+                "Connect Suite login verification\n\n"
                 f"Your one-time code is: {code}\n\n"
                 "It expires in 5 minutes. Never share this code with anyone. "
                 "If you did not request it, ignore this message.",
